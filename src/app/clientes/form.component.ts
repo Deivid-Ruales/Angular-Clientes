@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
 
@@ -12,18 +13,41 @@ export class FormComponent {
   public cliente: Cliente = new Cliente()
   public titulo: string = "Crear Cliente"
 
-  constructor(private clienteService: ClienteService, private router: Router) { }
+  constructor(
+    private clienteService: ClienteService, 
+    private router: Router,
+    private activateRoute : ActivatedRoute
+    ) { }
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
+    this.cargarCliente()
 
+  }
+
+  cargarCliente(): void{
+    this.activateRoute.params.subscribe(params =>{
+      let id = params['id']
+      if(id){
+        this.clienteService.getCliente(id).subscribe((cliente) => this.cliente = cliente)
+      }
+    })
   }
 
   public create(): void{
     this.clienteService.create(this.cliente).subscribe(
-      response => this.router.navigate(['/clientes'])
+      response => {
+      this.router.navigate(['/clientes'])
+      Swal.fire('Nuevo cliente', `Cliente ${this.cliente.nombre} creado con exito`, 'success')
+    }
     )
+  }
+
+  updateCliente(): void{
+    this.clienteService.updateCliente(this.cliente)
+    .subscribe( cliente =>{
+      this.router.navigate(['/clientes'])
+      Swal.fire('Cliente Actualizado', `Cliente ${cliente.nombre} actualizado con éxito`, 'success')
+    })
   }
 
 }

@@ -5,18 +5,18 @@
 
   <div class="card-body">
 
-    <form (ngSubmit)="create()">
+    <form>
       <div class="form-group row">
         <label for="Nombre" class="col-form label col-sm-2">Nombre</label>
         <div class="col-sm-6">
-          <input type="text" class="form-control" [(ngModel)]="cliente.nombre" name="nombre" >
+          <input type="text" class="form-control" [(ngModel)]="cliente.nombre" name="nombre">
         </div>
       </div>
 
       <div class="form-group row">
         <label for="Apellido" class="col-form label col-sm-2">Apellido</label>
         <div class="col-sm-6">
-          <input type="text" class="form-control" [(ngModel)]="cliente.apellido" name="apellido" >
+          <input type="text" class="form-control" [(ngModel)]="cliente.apellido" name="apellido">
         </div>
       </div>
 
@@ -29,7 +29,11 @@
 
       <div class="form-group row">
         <div class="col-sm-6">
-          <button class="btn btn-rounded btn-primary" role="button">Crear</button>
+          <button class="btn btn-rounded btn-primary" role="button" (click)="create()"
+            *ngIf="!cliente.id else elseBlock">Crear</button>
+          <ng-template #elseBlock>
+            <button class="btn btn-primary" role="button" (click)="updateCliente()">Editar</button>
+          </ng-template>
         </div>
       </div>
     </form>
