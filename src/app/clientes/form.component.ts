@@ -35,18 +35,18 @@ export class FormComponent {
 
   public create(): void{
     this.clienteService.create(this.cliente).subscribe(
-      response => {
+      cliente => {
       this.router.navigate(['/clientes'])
-      Swal.fire('Nuevo cliente', `Cliente ${this.cliente.nombre} creado con exito`, 'success')
+      Swal.fire('Nuevo cliente', `${cliente.nombre} a sido creado con éxito`, 'success')
     }
     )
   }
 
   updateCliente(): void{
     this.clienteService.updateCliente(this.cliente)
-    .subscribe( cliente =>{
+    .subscribe( response =>{
       this.router.navigate(['/clientes'])
-      Swal.fire('Cliente Actualizado', `Cliente ${cliente.nombre} actualizado con éxito`, 'success')
+      Swal.fire('Cliente Actualizado', `${response.mensaje}: ${response.cliente.nombre}`, 'success')
     })
   }
 
