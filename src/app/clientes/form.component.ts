@@ -12,6 +12,7 @@ export class FormComponent {
 
   public cliente: Cliente = new Cliente()
   public titulo: string = "Crear Cliente"
+  public errores: string[];
 
   constructor(
     private clienteService: ClienteService, 
@@ -34,10 +35,15 @@ export class FormComponent {
   }
 
   public create(): void{
-    this.clienteService.create(this.cliente).subscribe(
-      cliente => {
+    this.clienteService.create(this.cliente)
+    .subscribe( cliente => {
       this.router.navigate(['/clientes'])
       Swal.fire('Nuevo cliente', `${cliente.nombre} a sido creado con éxito`, 'success')
+    },
+    err => {
+      this.errores = err.error.errors as string[];
+      console.error('Código del error desde el backend: ' + err.status);
+      console.error(err.error.errors);
     }
     )
   }
@@ -47,7 +53,13 @@ export class FormComponent {
     .subscribe( response =>{
       this.router.navigate(['/clientes'])
       Swal.fire('Cliente Actualizado', `${response.mensaje}: ${response.cliente.nombre}`, 'success')
-    })
+    },
+    err => {
+      this.errores = err.error.errors as string[];
+      console.error('Código del error desde el backend: ' + err.status);
+      console.error(err.error.errors);
+    }
+    )
   }
 
 }
