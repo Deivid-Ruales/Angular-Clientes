@@ -4,7 +4,7 @@ import { Cliente } from './cliente';
 import { Observable, throwError } from 'rxjs';
 import { of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 
@@ -21,12 +21,25 @@ export class ClienteService {
 
   getClientes(): Observable<Cliente[]> {
     return this.http.get(this.urlEndPoint).pipe(
+      tap(response => {
+        let clientes = response as Cliente[];
+        console.log('ClienteService:tap1');
+        clientes.forEach(cliente => {
+          console.log(cliente.nombre);
+        })
+      }),
       map(response => {
         let clientes = response as Cliente[];
         return clientes.map(cliente => {
           cliente.nombre = cliente.nombre.toUpperCase();
-          cliente.createAt = formatDate(cliente.createAt, 'EEEE dd, MMMM, yyyy', 'es');
+          //cliente.createAt = formatDate(cliente.createAt, 'EEEE dd, MMMM, yyyy', 'es');
           return cliente;
+        })
+      }),
+      tap(response => {
+        console.log('ClienteService:tap2');
+        response.forEach(cliente => {
+          console.log(cliente.nombre);
         })
       })
     )
